@@ -37,7 +37,7 @@ int main (int argc, char *argv[]) {
 
   if ((pwd = getpwuid(statbuf.st_uid)) == NULL) {
     printf("Error no >> %d\n", errno);
-    perror("Groupname");
+    perror("Username");
     return 1;
   }
 
