@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <errno.h>
 #include <sys/mman.h>
 #include <sys/uio.h>
 
@@ -21,7 +22,7 @@ struct details {
 /* Main function */
 int main() {
   /* local variables */
-  int fd,fd1,fd2,count,i;
+  int fd, fd1, fd2, count, i, check;
   size_t size;
   struct details *record;
   char buffer[179];
@@ -37,47 +38,98 @@ int main() {
   }
   
   /* mmap system call */
-  if((record = (struct details *) mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED,fd, 0)) == MAP_FAILED) {
+  if ((record = (struct details *) mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) {
     perror("mmap");
     exit(1);
   }
 
-  for (i=0; i<RECORDS; i++) {
+  for (i = 0; i < RECORDS; i++) {
     record[i].id = FIRST_RECORD_NO + i;
-    sprintf(record[i].name, "\tNoName\n");
+    if ((check = sprintf(record[1].name, "\tNoName\n")) < 0) {
+      printf("Error No >> %d\n", errno);
+      perror("Record Update");
+      return 1;
+    }
   }
 
-  write(fd, record, size);
+  if ((check = write(fd, record, size)) < 0) {
+    printf("Error No >> %d\n", errno); 
+    perror(RECORD_FILE);
+    return 1;
+  }
    
   /*Contents of the record file before it is modified*/
-  write(1,buff,sizeof (buff));
-
+  if ((check = write( 1, buff, sizeof (buff))) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("Screen display failed");
+    return 1;
+  }
+  
   if ((fd1 = open(RECORD_FILE, O_RDONLY)) < 0) {
     perror(RECORD_FILE);
     exit(1);
   }
-  while ((count = read(fd1,buffer,30)) > 0) {
-    write(1,buffer,count);
+  while ((count = read(fd1, buffer, 30)) > 0) {
+    if ((check = write(1, buffer, count)) < 0) {
+      printf("Error No >> %d\n", errno);
+      perror(RECORD_FILE);
+      return 1;
+    }
   }
 
   /* Set the file offset to 0 */
-  lseek(fd, 0, SEEK_SET);
- 
+  if ((check = lseek(fd, 0, SEEK_SET)) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("lseek failed");
+    return 1;
+  } 
+
   /* Update second record */
   record[1].id = 53;
-  sprintf(record[1].name,"\tSUNeeta\n");
-  write(fd, record, size);
+  if ((check = sprintf(record[1].name, "\tSUNeeta\n")) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("Record Update");
+    return 1;
+  }
+
+  if ((check = write(fd, record, size)) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror(RECORD_FILE);
+    return 1;
+  }
   
   /*Contents of the record file after it is modified*/
-  write(1,buff1,sizeof(buff1));
+  if ((check = write(1, buff1, sizeof(buff1))) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("Display");
+    return 1;
+  }
+
   if ((fd2 = open(RECORD_FILE, O_RDONLY)) < 0) {
     perror(RECORD_FILE);
     exit(1);
   }
-  while ((count = read(fd2,buffer,179)) > 0) {
-    write(1,buffer,count);
+  while ((count = read(fd2, buffer, 179)) > 0) {
+    if ((check = write(1, buffer, count)) < 0) {
+      printf("Error No >> %d\n", errno);
+      perror(RECORD_FILE);
+      return 1;
+    }
   }
-  close(fd);
-  close(fd1);
-  close(fd2);
+  if ((check = close(fd)) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("error closing fd");
+    return 1;
+  }
+  if ((check = close(fd1)) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("error closing fd");
+    return 1;
+  }
+  if ((check = close(fd2)) < 0) {
+    printf("Error No >> %d\n", errno);
+    perror("error closing fd");
+    return 1;
+  }
+  return 0;
 }
