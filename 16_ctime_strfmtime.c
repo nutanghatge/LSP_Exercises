@@ -11,7 +11,7 @@
 #define FORMAT "%a %b %d %H:%M:%S %Y"
 #define TEST_FILE "test"
 
-int main () {
+int main() {
   /* Local Variables and declarations */
   char date[70];
   struct stat statbuf;
@@ -28,7 +28,7 @@ int main () {
     return 1;
   }
   /* extract modified time and set it as per required format */
-  strftime(date, sizeof (date), FORMAT, localtime(&(statbuf.st_atime)));
+  strftime(date, sizeof(date), FORMAT, localtime(&(statbuf.st_atime)));
   printf("%s\n%s\n", date, ctime(&(statbuf.st_ctime)));
   return 0;
 }
