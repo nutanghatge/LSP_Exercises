@@ -6,7 +6,7 @@
 #include <time.h>
 #include <sys/stat.h>
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   /* Local Variables and declarations */
   struct stat statBuf;
   char date[10];
