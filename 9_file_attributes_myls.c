@@ -8,8 +8,7 @@
 #include <pwd.h>
 #include <sys/stat.h>
 
-int main (int argc, char *argv[]) {
-
+int main(int argc, char *argv[]) {
   /* Local Variables and declarations */
   struct stat statbuf;
   struct group *grp;
