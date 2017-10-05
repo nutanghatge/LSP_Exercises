@@ -26,10 +26,7 @@ int main() {
   size_t size;
   struct details *record;
   char buffer[179];
-  char buff[] = "Contents of the record file before it is modified\n";
-  char buff1[] = "Contents of the record file after it is modified\n";
-  
-  size = sizeof (struct details) * RECORDS;  
+  size = sizeof(struct details) * RECORDS;  
 
   /* Writing Records */
   if ((fd = open(RECORD_FILE, O_RDWR)) < 0) {
@@ -59,11 +56,7 @@ int main() {
   }
    
   /*Contents of the record file before it is modified*/
-  if ((check = write( 1, buff, sizeof (buff))) < 0) {
-    printf("Error No >> %d\n", errno);
-    perror("Screen display failed");
-    return 1;
-  }
+  printf("Content of the record file before modification\n");
   
   if ((fd1 = open(RECORD_FILE, O_RDONLY)) < 0) {
     perror(RECORD_FILE);
@@ -99,11 +92,7 @@ int main() {
   }
   
   /*Contents of the record file after it is modified*/
-  if ((check = write(1, buff1, sizeof(buff1))) < 0) {
-    printf("Error No >> %d\n", errno);
-    perror("Display");
-    return 1;
-  }
+  printf("\nContent of the file after modification\n");
 
   if ((fd2 = open(RECORD_FILE, O_RDONLY)) < 0) {
     perror(RECORD_FILE);
