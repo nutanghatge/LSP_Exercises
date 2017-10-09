@@ -52,7 +52,10 @@ int main(void)
 
   /* change current directory to the given directory */
   if ((check = chdir(FOLDERPATH)) < 0) {
-    printf("err no >> %d\n", errno);
+    if ((check = printf("Error no >> %d\n", errno)) < 0) {
+      perror("printf error");
+      return 1;
+    }
     perror("chdir");
     return 1;
   }
@@ -63,7 +66,14 @@ int main(void)
   {
     while ((dir = readdir(d)) != NULL)
     {
-      stat(dir->d_name,&statbuf);
+      if ((check = stat(dir->d_name,&statbuf)) < 0) {
+        if ((check = printf("Error no >> %d\n", errno)) < 0) {
+          perror("printf error");
+          return 1;
+        }
+        perror("stat");
+        return 1;
+      }
       size = size + (statbuf.st_size);
     }
     if ((check = printf("total size of all files %ld\n", size)) < 0) {
@@ -73,7 +83,10 @@ int main(void)
     closedir(d);
     return 0;
   }
-  printf("error no >> %d\n", errno);
+  if ((check = printf("Error no >> %d\n", errno)) < 0) {
+    perror("printf error");
+    return 1;
+  }
   perror("opendir");
   return 1;
 }
