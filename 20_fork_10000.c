@@ -42,11 +42,9 @@
  *                          MAIN                                                     *
  *************************************************************************************/
 int main() {
-  /* Local Variables*/
   pid_t pid;
   int n,check;
   char *identity;
-  /* fork */
   pid = fork();
   switch (pid) {
     case -1:
@@ -65,9 +63,9 @@ int main() {
       break;
   }
   for(n = ITERN; n > 0; n--) {
-    if ((check = printf("%s + %d\n",identity,pid)) < 0) {
-        perror("printf error");
-        return 1;
+    if ((check = printf("%s + %d\n", identity, pid)) < 0) {
+      perror("printf error");
+      return 1;
       }
   }
   return 0;
