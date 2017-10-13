@@ -1,10 +1,10 @@
 /*===================================================================================*/
 /*************************************************************************************/
 /**
- * @file      32_local_client.c
+ * @file      33_rot13_client.c
  * @brief     Exercise on socket
- * @details   This program is TCP echo server listening to port 8000, i.e. it
- *            replies back with the same text that the client sends to it. 
+ * @details   This program is TCP server which returns every character rotated by
+ *            13 (plus 13, modulo 26)
  * @see
  * @author    Nutan Ghatge, nutanghatge@elear.solutions
  * @copyright Copyright (c) 2017 Elear Solutions Tech Private Limited. All rights
