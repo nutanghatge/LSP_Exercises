@@ -119,19 +119,19 @@ int main() {
   server_len = sizeof(server_address);
   server_address.sin6_port = htons(SERVER_PORT);
 
-  if ((bind(server_sockfd, (struct sockaddr *)&server_address, server_len)) < 0) {
+  if (bind(server_sockfd, (struct sockaddr *)&server_address, server_len) < 0) {
     printf("error no >> %d\n", errno);
     perror("bind");
     return EXIT_FAILURE;
   }
 
-  if ((listen(server_sockfd, 5)) < 0) {
+  if (listen(server_sockfd, 5) < 0) {
     printf("error no >> %d\n", errno);
     perror("listen");
     return EXIT_FAILURE;
   }
   while (1) {
-    if ((printf("server waiting\n")) < 0) {
+    if (printf("server waiting\n") < 0) {
       printf("error no >> %d\n", errno);
       perror("printf error");
       return EXIT_FAILURE;
@@ -144,14 +144,8 @@ int main() {
       return EXIT_FAILURE;
     }
 
-    if ((rot13_service(client_sockfd, client_sockfd)) < 0) {
+    if (rot13_service(client_sockfd, client_sockfd) < 0) {
         return EXIT_FAILURE;
-    }
-
-    if ((close(client_sockfd)) < 0) {
-      printf("error no >> %d\n", errno);
-      perror("close");
-      return EXIT_FAILURE;
     }
   }
   return EXIT_SUCCESS;
