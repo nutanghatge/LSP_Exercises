@@ -69,20 +69,23 @@
 /*************************************************************************************
  *                          MAIN                                                     *
  *************************************************************************************/
-int main(int argc, char *argv[])
-{
-  int    sock;			
+int main(int argc, char *argv[]) {
+  int sock;			
   struct sockaddr_in server;		
   struct hostent *host;		
-  char   buffer[BSIZE], *p;
-  int    count, server_len;
+  char buffer[BSIZE], *p;
+  int count, server_len;
 
   if (argc != 3) {
-    printf("usage: %s hostname filename\n", argv[0]);
+    printf("usage: %s <hostname> <filename>\n", argv[0]);
     return EXIT_FAILURE;
   }
 
-  sock = socket(AF_INET, SOCK_DGRAM, 0);
+  if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    printf("Error no >> %d\n", errno);
+    perror("socket");
+    return EXIT_FAILURE;
+  }
 
   if ((host = gethostbyname(argv[1])) == NULL) {
     printf("unknown host: %s\n", argv[1]);
@@ -106,14 +109,6 @@ int main(int argc, char *argv[])
     count = recvfrom(sock, buffer, BSIZE, 0, (struct sockaddr *)&server, &server_len);
     if (ntohs(*(short *)buffer) == OP_ERROR) {
       printf("stream: %s\n", buffer+4);
-    } else {
-      if (write(1, buffer+4, count-4) < 0) {
-        perror("write");
-        return EXIT_FAILURE;
-      }
-      *(short *)buffer = htons(OP_ACK);
-      sendto(sock, buffer, 4, 0, (struct sockaddr *)&server, sizeof server);
     }
-  } while (count == 516);
-  return 0;
+    return EXIT_FAILURE;
 }
