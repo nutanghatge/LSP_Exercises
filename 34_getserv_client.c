@@ -98,39 +98,32 @@ int main(int argc, char *argv[]) {
   address.sin_port = servinfo->s_port;
   printf("sin_port >> %d\n", address.sin_port);
   
-  if ((connect(sockfd, (struct sockaddr *)&address, len)) < 0) {
+  if (connect(sockfd, (struct sockaddr *)&address, len) < 0) {
     perror("oops: client1");
     return EXIT_FAILURE;
   }
 
   while ((count = read(0, message, BSIZE)) > 0) {
-      if ((write(sockfd, message, count)) < 0) {
+      if (write(sockfd, message, count) < 0) {
         printf("error no >> %d\n", errno);
         perror("write");
         return EXIT_FAILURE;
       }
-      if ((read(sockfd, message, count)) < 0) {
+      if (read(sockfd, message, count) < 0) {
         printf("error no >> %d\n", errno);
         perror("write");
         return EXIT_FAILURE;
       }
-      if ((write(1, message, count)) < 0) {
+      if (write(1, message, count) < 0) {
         printf("error no >> %d\n", errno);
         perror("write");
         return EXIT_FAILURE;
       }
-    if ((printf("message from server = %s\n", message)) < 0) {
+    if (printf("message from server = %s\n", message) < 0) {
       printf("error no >> %d\n", errno);
       perror("printf");
       return EXIT_FAILURE;
     }
   }
-  
-  if((close(sockfd)) < 0) {
-    printf("error no >> %d\n", errno);
-    perror("close");
-    return EXIT_FAILURE;
-  }
-
   return EXIT_SUCCESS;
 }
