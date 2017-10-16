@@ -3,8 +3,8 @@
 /**
  * @file      33_rot13_client.c
  * @brief     Exercise on socket
- * @details   This program is TCP server which returns every character rotated by
- *            13 (plus 13, modulo 26)
+ * @details   This program is a client for rot13 server which returns every character 
+ *            rotated by 13 (plus 13, modulo 26)
  * @see
  * @author    Nutan Ghatge, nutanghatge@elear.solutions
  * @copyright Copyright (c) 2017 Elear Solutions Tech Private Limited. All rights
@@ -37,6 +37,7 @@
  *************************************************************************************/
 #define SERVER_PORT 8000
 #define BSIZE 1024
+
 /*************************************************************************************
  *                          LOCAL TYPEDEFS                                           *
  *************************************************************************************/
@@ -98,34 +99,27 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  while ((count = read(sockfd, message, BSIZE)) > 0) {
+  while ((count = read(0, message, BSIZE)) > 0) {
       if ((write(sockfd, message, count)) < 0) {
         printf("error no >> %d\n", errno);
         perror("write");
         return EXIT_FAILURE;
       }
-      if ((read(sockfd, message, count)) < 0) {
+      if (read(sockfd, message, count) < 0) {
         printf("error no >> %d\n", errno);
         perror("write");
         return EXIT_FAILURE;
       }
-      if ((write(1, message, count)) < 0) {
+      if (write(1, message, count) < 0) {
         printf("error no >> %d\n", errno);
         perror("write");
         return EXIT_FAILURE;
       }
-    if ((printf("message from server = %s\n", message)) < 0) {
+    if (printf("message from server = %s\n", message) < 0) {
       printf("error no >> %d\n", errno);
       perror("printf");
       return EXIT_FAILURE;
     }
   }
-  
-  if((close(sockfd)) < 0) {
-    printf("error no >> %d\n", errno);
-    perror("close");
-    return EXIT_FAILURE;
-  }
-
   return EXIT_SUCCESS;
 }
